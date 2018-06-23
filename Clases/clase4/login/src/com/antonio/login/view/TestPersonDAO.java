@@ -11,6 +11,8 @@ public class TestPersonDAO {
 	public static void main(String[] args) {
 		
 		printUsers();
+		printUser(1);
+		printUser("claudia@gmail.com");
 	
 	}
 	
@@ -35,6 +37,16 @@ public class TestPersonDAO {
 		for (Person person : persons) {
 			System.out.println(person);
 		}
+	}
+	
+	public static void printUser(int id) {
+		PersonDAO personDao = new PersonDAOImpl();
+		System.out.println(personDao.getById(id));
+	}
+	
+	public static void printUser(String email) {
+		PersonDAO personDao = new PersonDAOImpl();
+		System.out.println(personDao.getByEmail(email));
 	}
 
 }

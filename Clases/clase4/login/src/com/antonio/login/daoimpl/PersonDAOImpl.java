@@ -17,6 +17,8 @@ public class PersonDAOImpl implements PersonDAO {
 	// Declaracion de queries
 	private static final String INSERT_QUERY = "INSERT INTO PERSON (Id, Name, Last_Name, Email, Age, Address, Password) VALUES (NULL, ?, ?, ?, ?, ?, ?)";
 	private static final String GET_ALL = "SELECT *FROM PERSON";
+	private static final String FIND_BY_ID = "SELECT * FROM PERSON WHERE Id = ?";
+	private static final String FIND_BY_EMAIL = "SELECT * FROM PERSON WHERE email = ?";
 
 	@Override
 	public void insert(Person person) {
@@ -49,11 +51,11 @@ public class PersonDAOImpl implements PersonDAO {
 		try {
 			Statement statement = connection.createStatement();
 			ResultSet resultSet = statement.executeQuery(GET_ALL);
-			
+
 			Person person = null;
-			while(resultSet.next()) {
+			while (resultSet.next()) {
 				person = new Person();
-				
+
 				person.setId(Integer.parseInt(resultSet.getString("Id")));
 				person.setName(resultSet.getString("Name"));
 				person.setLastName(resultSet.getString("Last_Name"));
@@ -61,7 +63,7 @@ public class PersonDAOImpl implements PersonDAO {
 				person.setAge(Integer.parseInt(resultSet.getString("Age")));
 				person.setAddress(resultSet.getString("Address"));
 				person.setPassword(resultSet.getString("Password"));
-				
+
 				personsList.add(person);
 			}
 			resultSet.close();
@@ -75,13 +77,63 @@ public class PersonDAOImpl implements PersonDAO {
 
 	@Override
 	public Person getById(int id) {
-		// TODO Auto-generated method stub
+		Connection connection = DAOFactory.getMySqlDB().openConnection();
+		Person person = null;
+		try {
+			PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_ID);
+			preparedStatement.setInt(1, id);
+
+			ResultSet resultSet = preparedStatement.executeQuery();
+
+			while (resultSet.next()) {
+				person = new Person();
+
+				person.setId(Integer.parseInt(resultSet.getString("Id")));
+				person.setName(resultSet.getString("Name"));
+				person.setLastName(resultSet.getString("Last_Name"));
+				person.setEmail(resultSet.getString("Email"));
+				person.setAge(Integer.parseInt(resultSet.getString("Age")));
+				person.setAddress(resultSet.getString("Address"));
+				person.setPassword(resultSet.getString("Password"));
+			}
+
+			resultSet.close();
+			connection.close();
+			return person;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
 	@Override
 	public Person getByEmail(String email) {
-		// TODO Auto-generated method stub
+		Connection connection = DAOFactory.getMySqlDB().openConnection();
+		Person person = null;
+		try {
+			PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_EMAIL);
+			preparedStatement.setString(1, email);
+
+			ResultSet resultSet = preparedStatement.executeQuery();
+
+			while (resultSet.next()) {
+				person = new Person();
+
+				person.setId(Integer.parseInt(resultSet.getString("Id")));
+				person.setName(resultSet.getString("Name"));
+				person.setLastName(resultSet.getString("Last_Name"));
+				person.setEmail(resultSet.getString("Email"));
+				person.setAge(Integer.parseInt(resultSet.getString("Age")));
+				person.setAddress(resultSet.getString("Address"));
+				person.setPassword(resultSet.getString("Password"));
+			}
+
+			resultSet.close();
+			connection.close();
+			return person;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
